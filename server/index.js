@@ -63,6 +63,47 @@ app.post("/movies", async (req, res) => {
   });
 });
 
+app.get("/movies", async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 0;
+    const limit = parseInt(req.query.limit) || 10;
+
+    const skip = page * limit;
+
+    const count = await Movie.countDocuments();
+
+    const movies = await Movie.find()
+      .skip(skip)
+      .limit(limit)
+      .sort({ createdAt: -1 });
+
+    // next page link
+    const next =
+      skip + limit < count
+        ? `https://cine-hub-api.onrender.com/movies?page=${page + 1}`
+        : null;
+
+    // previous page link
+    const previous =
+      page > 0
+        ? `https://cine-hub-api.onrender.com/movies?page=${page - 1}`
+        : null;
+
+    res.json({
+      count,
+      next,
+      previous,
+      data: movies,
+      message: "Movies fetched successfully",
+    });
+  } catch (error) {
+    res.status(500).json({
+      message: "Error fetching movies",
+      error: error.message,
+    });
+  }
+});
+
 
 const PORT = process.env.PORT || 5000;
 
