@@ -51,14 +51,12 @@ const getMovies = async (req, res) => {
     // next page link
     const next =
       skip + limit < count
-        ? `https://cine-hub-api.onrender.com/movies?page=${page + 1}`
+        ? `${process.env.baseURL}/movies?page=${page + 1}`
         : null;
 
     // previous page link
     const previous =
-      page > 0
-        ? `https://cine-hub-api.onrender.com/movies?page=${page - 1}`
-        : null;
+      page > 0 ? `${process.env.baseURL}/movies?page=${page - 1}` : null;
 
     res.json({
       count,
@@ -113,7 +111,7 @@ const getMovieBySearch = async (req, res) => {
       .limit(limit)
       .sort({ createdAt: -1 });
 
-      const params = new URLSearchParams({
+    const params = new URLSearchParams({
       ...(title && { title }),
       ...(genre && { genre }),
       ...(cast && { cast }),
@@ -123,12 +121,16 @@ const getMovieBySearch = async (req, res) => {
 
     const next =
       skip + limit < count
-        ? `${process.env.baseURL}/movies/search?${params.toString()}&page=${page + 1}`
+        ? `${process.env.baseURL}/movies/search?${params.toString()}&page=${
+            page + 1
+          }`
         : null;
 
     const previous =
       page > 0
-        ? `${process.env.baseURL}/movies/search?${params.toString()}&page=${page - 1}`
+        ? `${process.env.baseURL}/movies/search?${params.toString()}&page=${
+            page - 1
+          }`
         : null;
 
     if (movies.length === 0) {
@@ -180,6 +182,94 @@ const getMovieById = async (req, res) => {
   }
 };
 
+const updateRating = async (req, res) => {
+  const { id } = req.params;
+  const { rating } = req.body;
+  try {
+    const movie = await Movie.findById(id);
+    if (!rating || rating < 0 || rating > 10) {
+      return res.status(400).json({
+        success: false,
+        data: null,
+        message: "Rating must be between 0 and 10",
+      });
+    }
 
+    if (movie) {
+      movie.rating = rating;
 
-export { addMovie, getMovies, getMovieById, getMovieBySearch };
+      const updatedMovie = await movie.save();
+      return res.json({
+        success: true,
+        data: updatedMovie,
+        message: "Movie rating updated successfully",
+      });
+    } else {
+      return res.status(404).json({
+        success: false,
+        data: null,
+        message: "Movie not found",
+      });
+    }
+  } catch (error) {
+    return res.status(400).json({
+      success: false,
+      data: null,
+      message: "Error updating movie rating : " + error.message,
+    });
+  }
+};
+
+const updateMovie = async (req, res) => {
+  const { id } = req.params;
+  const {
+    title,
+    description,
+    images,
+    director,
+    year,
+    genre,
+    cast,
+    rating,
+    duration,
+  } = req.body;
+  try {
+    await Movie.updateOne(
+      { _id: id },
+      {
+        title,
+        description,
+        images,
+        director,
+        year,
+        genre,
+        cast,
+        rating,
+        duration,
+      }
+    );
+
+    const updatedMovie = await Movie.findById(id);
+
+    res.json({
+      success: true,
+      data: updatedMovie,
+      message: "Movie updated successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      data: null,
+      message: "Error updating movie: " + error.message,
+    });
+  }
+};
+
+export {
+  addMovie,
+  getMovies,
+  getMovieById,
+  getMovieBySearch,
+  updateRating,
+  updateMovie,
+};
