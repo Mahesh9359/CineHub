@@ -1,108 +1,150 @@
 "use client";
 
-import React from "react";
-import Link from "next/link";
+import { useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
+import { motion } from "framer-motion";
 import heroImg from "../../../public/hero2.png";
+import { useLayout } from "@/context/layout-context";
 
-function Home() {
+// Animation Variants
+const container = {
+  hidden: { opacity: 0 },
+  show: {
+    opacity: 1,
+    transition: { staggerChildren: 0.12 },
+  },
+};
+
+const item = {
+  hidden: { opacity: 0, y: 20 },
+  show: { opacity: 1, y: 0, transition: { duration: 0.6 } },
+};
+
+export default function HomePage() {
+  const { setIsHomePage } = useLayout();
+
+  useEffect(() => {
+    setIsHomePage(true);
+    return () => setIsHomePage(false);
+  }, [setIsHomePage]);
+
   return (
-    <div>
-      {/* Hero Section with Parallax Effect */}
-      <div className="relative w-full h-screen min-h-[600px] max-h-[800px] overflow-hidden">
-        <div className="absolute inset-0 bg-gradient-to-t from-gray-900 via-gray-900/70 to-transparent z-10" />
+    <main className="bg-gradient-to-b from-gray-900 to-black text-white">
+
+      {/* HERO SECTION */}
+      <section className="relative w-full h-screen max-h-[820px] overflow-hidden">
         <Image
           src={heroImg}
-          alt="hero-banner"
+          alt="CineHub Hero Banner"
           fill
           priority
-          className="object-full object-center"
-          quality={100}
-          placeholder="blur"
+          className="object-fill object-center opacity-90"
         />
 
-        <div className="relative z-20 h-full flex flex-col justify-center items-center text-center px-4 pt-16">
-          <h1 className="text-5xl md:text-7xl lg:text-8xl font-bold mb-6 bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-amber-500 to-orange-500">
-            Welcome to CineHub
-          </h1>
-          <p className="text-xl md:text-2xl lg:text-3xl mb-8 text-gray-300 max-w-3xl mx-auto">
-            Your ultimate destination for movies and anime. Discover, watch, and
-            enjoy.
-          </p>
-          <div className="flex gap-4 justify-center">
-            <Link
-              href="/movies"
-              className="px-8 py-3 bg-gradient-to-r from-amber-500 to-orange-600 rounded-full font-bold text-lg shadow-lg hover:shadow-xl hover:scale-105 transition-all duration-300 flex items-center gap-2"
-            >
-              <span>Explore Movies</span>
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                className="h-5 w-5"
-                viewBox="0 0 20 20"
-                fill="currentColor"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M10 18a8 8 0 100-16 8 8 0 000 16zM9.555 7.168A1 1 0 008 8v4a1 1 0 001.555.832l3-2a1 1 0 000-1.664l-3-2z"
-                  clipRule="evenodd"
-                />
-              </svg>
-            </Link>
-            <Link
-              href="/anime"
-              className="px-8 py-3 border-2 border-amber-500 text-amber-500 rounded-full font-bold text-lg hover:bg-amber-500 hover:bg-opacity-10 transition-all duration-300"
-            >
-              Browse Anime
-            </Link>
-          </div>
-        </div>
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
 
-        {/* Scrolling indicator */}
-        <div className="absolute bottom-8 left-1/2 transform -translate-x-1/2 z-20">
-          <span className="text-sm mb-1">Scroll Down</span>
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            className="h-6 w-6"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
+        <div className="relative z-20 flex h-full flex-col justify-center items-center text-center px-6">
+          <motion.div
+            initial={{ opacity: 0, y: 60 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.9 }}
+            className="max-w-4xl space-y-6"
           >
-            <path
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth={2}
-              d="M19 14l-7 7m0 0l-7-7m7 7V3"
-            />
-          </svg>
-        </div>
-      </div>
+            <h1 className="text-5xl md:text-7xl lg:text-8xl font-extrabold bg-clip-text text-transparent bg-gradient-to-r from-yellow-400 via-orange-500 to-red-500 drop-shadow-xl">
+              Welcome to CineHub
+            </h1>
 
-      {/* Content Sections */}
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
-        {/* Top Movies Section */}
-
-        {/* Call to Action */}
-        <div className="mt-24 mb-16 relative rounded-2xl overflow-hidden">
-          <div className="absolute inset-0 bg-gradient-to-r from-purple-900 to-amber-900 opacity-80 z-0" />
-          <div className="relative z-10 p-8 sm:p-12 lg:p-16 text-center">
-            <h2 className="text-3xl sm:text-4xl lg:text-5xl font-bold mb-4">
-              Ready to dive in?
-            </h2>
-            <p className="text-xl text-gray-300 max-w-2xl mx-auto mb-8">
-              Join thousands of users enjoying the best movies and anime in one
-              place.
+            <p className="text-lg md:text-2xl text-gray-300 max-w-2xl mx-auto">
+              Discover the world of Cinema and Anime — your one-stop platform for entertainment.
             </p>
+
+            <div className="flex gap-4 justify-center mt-8">
+              <Link
+                href="/movies"
+                className="px-8 py-3 rounded-full bg-gradient-to-r from-orange-500 to-red-600 font-semibold text-lg shadow-lg hover:scale-105 hover:shadow-2xl transition-all flex items-center gap-2"
+              >
+                Explore Movies
+              </Link>
+
+              <Link
+                href="/anime"
+                className="px-8 py-3 rounded-full border-2 border-orange-400 text-orange-300 font-semibold text-lg hover:bg-orange-400 hover:text-black transition-all"
+              >
+                Browse Anime
+              </Link>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Scroll Indicator */}
+        <motion.div
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 text-gray-300"
+          animate={{ y: [0, 10, 0] }}
+          transition={{ repeat: Infinity, duration: 1.5 }}
+        >
+          <p className="text-sm mb-1">Scroll Down</p>
+          <svg className="w-6 h-6" fill="none" stroke="currentColor" strokeWidth="2">
+            <path strokeLinecap="round" strokeLinejoin="round" d="M19 14l-7 7m0 0l-7-7m7 7V3" />
+          </svg>
+        </motion.div>
+      </section>
+
+      {/* SECTIONS */}
+      <section className="max-w-7xl mx-auto px-6 py-20">
+        
+        {/* MOVIES SECTION */}
+        <div className="flex justify-between items-center mb-8">
+          <h2 className="text-3xl font-bold">Top Movies</h2>
+          <Link href="/movies" className="text-orange-400 hover:underline">
+            View More →
+          </Link>
+        </div>
+
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        ></motion.div>
+
+        {/* ANIME SECTION */}
+        <div className="flex justify-between items-center mt-20 mb-8">
+          <h2 className="text-3xl font-bold">Top Anime</h2>
+          <Link href="/anime" className="text-orange-400 hover:underline">
+            View More →
+          </Link>
+        </div>
+
+        <motion.div
+          variants={container}
+          initial="hidden"
+          whileInView="show"
+          viewport={{ once: true }}
+          className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        ></motion.div>
+
+        {/* CTA SECTION */}
+        <div className="mt-28 relative rounded-3xl overflow-hidden shadow-xl">
+          <div className="absolute inset-0 bg-gradient-to-r from-purple-800/80 to-orange-700/80" />
+
+          <div className="relative p-12 text-center space-y-4">
+            <h2 className="text-4xl md:text-5xl font-bold">Ready to Dive In?</h2>
+            <p className="text-xl text-gray-200 max-w-2xl mx-auto">
+              Join thousands enjoying movies & anime all in one place.
+            </p>
+
             <Link
               href="/signup"
-              className="inline-block px-8 py-4 bg-white text-gray-900 font-bold rounded-full text-lg hover:bg-gray-200 transition-all duration-300 shadow-xl hover:shadow-2xl"
+              className="inline-block mt-6 px-10 py-4 bg-white text-black rounded-full font-bold shadow-lg hover:bg-gray-200 transition"
             >
               Get Started Now
             </Link>
           </div>
         </div>
-      </div>
-    </div>
+
+      </section>
+    </main>
   );
 }
-
-export default Home;
