@@ -9,6 +9,7 @@ import {
   getMovieBySearch,
   updateRating,
   updateMovie,
+  deleteMovie
 } from "./controllers/movies.js";
 
 dotenv.config();
@@ -47,6 +48,8 @@ app.get("/movies/:id", getMovieById);
 app.patch("/movies/:id/rating", updateRating);
 
 app.put("/movies/:id", updateMovie);
+
+app.delete("/movies/:id", deleteMovie);
 
 const PORT = process.env.PORT || 5000;
 

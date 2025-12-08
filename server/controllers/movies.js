@@ -265,6 +265,33 @@ const updateMovie = async (req, res) => {
   }
 };
 
+const deleteMovie = async (req, res) => {
+  const { id } = req.params;
+
+  try {
+    const deletedMovie = await Movie.findByIdAndDelete(id);
+
+    if (!deletedMovie) {
+      return res.status(404).json({
+        success: false,
+        message: "Movie not found",
+      });
+    }
+
+    res.json({
+      success: true,
+      data: deletedMovie,
+      message: "Movie deleted successfully",
+    });
+  } catch (error) {
+    res.status(400).json({
+      success: false,
+      message: "Error deleting movie: " + error.message,
+    });
+  }
+};
+
+
 export {
   addMovie,
   getMovies,
@@ -272,4 +299,5 @@ export {
   getMovieBySearch,
   updateRating,
   updateMovie,
+  deleteMovie
 };

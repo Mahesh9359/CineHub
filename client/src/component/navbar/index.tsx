@@ -13,7 +13,7 @@ export default function Navbar() {
     <nav
       className={`${
         isHomePage
-          ? "fixed top-0 left-0 right-0 bg-transparent text-white"
+          ? "fixed top-0 left-0 right-0 bg-transparent text-white backdrop-blur-sm"
           : "sticky top-0 bg-black/90 text-white shadow-lg"
       } z-50 transition-all`}
     >
