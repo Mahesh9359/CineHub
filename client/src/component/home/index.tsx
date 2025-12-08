@@ -47,7 +47,7 @@ export default function HomePage() {
 
   const onload = async () => {
     try {
-      const response = await axios.get("http://localhost:8080/movies");
+      const response = await axios.get(`${process.env.BASE_URL}/movies`);
       setShowMovies(response.data.data);
       console.log("data", response.data.data);
     } catch (error) {

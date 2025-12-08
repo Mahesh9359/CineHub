@@ -23,7 +23,7 @@ export default function PostMovies() {
     setLoading(true);
 
     try {
-      const response = await axios.post("http://localhost:8080/movies", movies);
+      const response = await axios.post(`${process.env.BASE_URL}/movies`, movies);
       alert(response.data.message || "Movie added successfully! 🎬");
       
       // Reset form
